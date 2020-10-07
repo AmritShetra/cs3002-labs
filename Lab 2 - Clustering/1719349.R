@@ -1,20 +1,32 @@
-# Load in the dataset 
-mydata = read.csv('iris.csv', sep=",")
+# --------------------------
+# Using the Weighted Kappa function, explore how the hierarchical clustering
+# compares to K-means for the iris dataset ('iris.csv') given the correct 
+# clusters in 'iris_real.csv'.
+#
+# 1) Calculate the WK for K-means clustering with different values of K.
+# 2) Try Hierarchical with different linkage measures.
+# 3) Use scatterplots to illustrate the different clusterings.
+# 4) Plot the dendrograms where necessary.
+# 5) Plot the different Weighted Kappa values on an appropriate graph.
+# --------------------------
 
-# Load in the correct group of clusters we can use as a metric for scoring 
+# Load in the datasets
+mydata = read.csv('iris.csv', sep=",")
+# Load in the correct clusters we can use as a metric for scoring in the WK 
 iris_real = read.csv('iris_real.csv', sep=",")
 
 # Load in an R script - the Weighted Kappa (WK) function
+# WK takes in 2 clusterings and returns a score
 source("WK_R.R")
 
-# Create empty data-frame to hold WK scores for each clustering technique
+# Create empty data-frame to hold WK scores for both clustering techniques
 df <- data.frame()
-
 
 # List of linkage measures for Hierarchical clustering
 measures <- c("single", "complete", "average")
 
 # Create matrix of Euclidean distances between each data-point
+# This is used when we do Hierarchical clustering
 d <- dist(mydata, method="euclidean")
 
 
@@ -58,7 +70,7 @@ plot(
   ylab="Weighted Kappa value"
 )
 
-# Looping 2:4 because the 1st column in the data-frame is for the K-means score 
+# Looping 2:4 because the 1st column in the data-frame is for the K-means score
 for (i in 2:4) {
   plot(
     df[, i],

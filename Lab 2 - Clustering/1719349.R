@@ -20,7 +20,8 @@ iris_real = read.csv('iris_real.csv', sep=",")
 source("WK_R.R")
 
 # Create empty data-frame to hold WK scores for both clustering techniques
-df <- data.frame()
+kmeans_df <- data.frame()
+hier_df <- data.frame()
 
 # List of linkage measures for Hierarchical clustering
 measures <- c("single", "complete", "average")
@@ -41,7 +42,7 @@ for (i in 2:K) {
   kappa <- WK_R(fit$cluster, iris_real$X1)
   
   # Put the kappa value in the ith row of the 1st column in our data-frame
-  df[i, 1] <- kappa
+  kmeans_df[i, 1] <- kappa
   
   # Loop through the linkage measures, e.g. "average"
   for (m in 1:length(measures)) {
@@ -57,25 +58,25 @@ for (i in 2:K) {
     # Draw a scatterplot with the assigned clusters
     # plot(mydata, col=Hgroups)
     
-    # Add the kappa scores, m+1 because Column 1 is for our K-Means scores
-    df[i, m+1] <- WK_R(Hgroups, iris_real$X1)
+    # Add the kappa scores to the data-frame
+    hier_df[i, m] <- WK_R(Hgroups, iris_real$X1)
   }
 }
 
-# Plot the first column of our data-frame
+# Plot the first (and only) column of the K-means data-frame
 plot(
-  df$V1,
+  kmeans_df$V1,
   main="K-means clustering",
   xlab="Number of clusters (K)",
   ylab="Weighted Kappa value"
 )
 
-# Looping 2:4 because the 1st column in the data-frame is for the K-means score
-for (i in 2:4) {
+# Looping through the 3 columns of the Hierarchical data-frame, to make 3 graphs
+for (i in 1:3) {
   plot(
-    df[, i],
+    hier_df[, i],
     # Subtract 1 from i, because the measures list is of length 3
-    main=paste("Hierarchical clustering: ", measures[i-1]),
+    main=paste("Hierarchical clustering: ", measures[i]),
     xlab="Number of clusters (K)",
     ylab="Weighted Kappa value"
   )

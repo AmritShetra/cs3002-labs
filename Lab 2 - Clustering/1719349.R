@@ -75,7 +75,6 @@ plot(
 for (i in 1:3) {
   plot(
     hier_df[, i],
-    # Subtract 1 from i, because the measures list is of length 3
     main=paste("Hierarchical clustering: ", measures[i]),
     xlab="Number of clusters (K)",
     ylab="Weighted Kappa value"

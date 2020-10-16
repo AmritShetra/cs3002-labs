@@ -11,9 +11,9 @@
 # --------------------------
 
 # Load in the datasets
-mydata = read.csv('iris.csv', sep=",")
+mydata = read.csv('iris.csv', sep=",", header=FALSE)
 # Load in the correct clusters we can use as a metric for scoring in the WK 
-iris_real = read.csv('iris_real.csv', sep=",")
+iris_real = read.csv('iris_real.csv', sep=",", header=FALSE)
 
 # Load in an R script - the Weighted Kappa (WK) function
 # WK takes in 2 clusterings and returns a score
@@ -39,7 +39,7 @@ for (i in 2:K) {
   fit <- kmeans(mydata, i)
   
   # Calculate WK between our clusters and the real clusters
-  kappa <- WK_R(fit$cluster, iris_real$X1)
+  kappa <- WK_R(fit$cluster, iris_real$V1)
   
   # Put the kappa value in the ith row of the 1st column in our data-frame
   kmeans_df[i, 1] <- kappa
@@ -59,7 +59,7 @@ for (i in 2:K) {
     # plot(mydata, col=Hgroups)
     
     # Add the kappa scores to the data-frame
-    hier_df[i, m] <- WK_R(Hgroups, iris_real$X1)
+    hier_df[i, m] <- WK_R(Hgroups, iris_real$V1)
   }
 }
 

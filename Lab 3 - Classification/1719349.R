@@ -32,3 +32,19 @@ y_train <- y[1:90]
 
 X_test <- X[90:150, ]
 y_test <- y[90:150]
+
+# Create a decision tree
+install.packages("rpart")
+library(rpart)
+fit <- rpart(y_train~., method="class", data=X_train)
+
+# Plot the decision tree
+plot(fit, uniform=TRUE, main="Decision Tree for iris")
+text(fit, use.n=TRUE, all=TRUE, cex=.8)
+
+# Make predictions on the test set
+irispred <- predict(fit, X_test, type="class")
+
+# Compare this to the actual test values to get the accuracy
+accuracy = sum(irispred == y_test) / length(y_test)
+print(accuracy)

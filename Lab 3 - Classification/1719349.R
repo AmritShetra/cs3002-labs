@@ -43,20 +43,48 @@ plot(fit, uniform=TRUE, main="Decision Tree for iris")
 text(fit, use.n=TRUE, all=TRUE, cex=.8)
 
 # Make predictions on the test set
-irispred <- predict(fit, X_test, type="class")
+tree_pred <- predict(fit, X_test, type="class")
 
 # Compare this to the actual test values to get the accuracy
-accuracy <- sum(irispred == y_test) / length(y_test)
+accuracy <- sum(tree_pred == y_test) / length(y_test)
 print(accuracy)
 
+
 # See what effect pruning has (using the cp parameter)
-for (i in c(0.1, 0.5, 1)) {
+for (i in c(0.1, 0.5, 0.9)) {
   pfit <- prune(fit, cp=i)
   # plot(pfit, uniform=TRUE, main="Pruned decision tree for iris")
   # text(pfit, use.n=TRUE, all=TRUE, cex=.8)
   
   # Calculate the accuracy of the pruned tree
-  irispred <- predict(pfit, X_test, type='class')
-  accuracy <- sum(irispred == y_test) / length(y_test)
+  tree_pred <- predict(pfit, X_test, type='class')
+  accuracy <- sum(tree_pred == y_test) / length(y_test)
   message("cp: " , i, ", Accuracy: ", accuracy)
 }
+
+
+# Select 2 variables of the data
+vars = c("V1", "V2")
+
+# Plot them on a scatterplot
+plot(
+  iris_rand$V1, iris_rand$V2,
+  main="V1 and V2",
+  col=c("blue", "red")
+)
+
+# Get a subset of the X datasets, just containing the above columns
+X_train_2 = X_train[, vars]
+X_test_2 = X_test[, vars]
+
+# Fit the decision tree and create a graph
+fit <- rpart(y_train~., method='class', data=X_train_2)
+plot(fit, uniform=TRUE, main="Decision Tree for iris (V1 and V2)")
+text(fit, use.n=TRUE, all=TRUE, cex=.8)
+
+# Make predictions on the test set
+irispred <- predict(fit, X_test_2, type="class")
+
+# Compare this to the actual test values to get the accuracy
+accuracy <- sum(irispred == y_test) / length(y_test)
+print(accuracy)

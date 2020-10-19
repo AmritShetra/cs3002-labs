@@ -46,5 +46,17 @@ text(fit, use.n=TRUE, all=TRUE, cex=.8)
 irispred <- predict(fit, X_test, type="class")
 
 # Compare this to the actual test values to get the accuracy
-accuracy = sum(irispred == y_test) / length(y_test)
+accuracy <- sum(irispred == y_test) / length(y_test)
 print(accuracy)
+
+# See what effect pruning has (using the cp parameter)
+for (i in c(0.1, 0.5, 1)) {
+  pfit <- prune(fit, cp=i)
+  # plot(pfit, uniform=TRUE, main="Pruned decision tree for iris")
+  # text(pfit, use.n=TRUE, all=TRUE, cex=.8)
+  
+  # Calculate the accuracy of the pruned tree
+  irispred <- predict(pfit, X_test, type='class')
+  accuracy <- sum(irispred == y_test) / length(y_test)
+  message("cp: " , i, ", Accuracy: ", accuracy)
+}

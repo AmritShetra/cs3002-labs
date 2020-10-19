@@ -83,8 +83,19 @@ plot(fit, uniform=TRUE, main="Decision Tree for iris (V1 and V2)")
 text(fit, use.n=TRUE, all=TRUE, cex=.8)
 
 # Make predictions on the test set
-irispred <- predict(fit, X_test_2, type="class")
+tree_pred <- predict(fit, X_test_2, type="class")
 
 # Compare this to the actual test values to get the accuracy
-accuracy <- sum(irispred == y_test) / length(y_test)
+accuracy <- sum(tree_pred == y_test) / length(y_test)
 print(accuracy)
+
+
+# Classifying using K-Nearest Neighbour - first, install the class lib
+library(class)
+
+# Generate predictions using different values of "k"
+for (i in c(3, 6, 9, 12, 15)) {
+  knn_pred = knn(X_train, X_test, y_train, k=i)
+  accuracy <- sum(knn_pred == y_test) / length(y_test)
+  message("k: " , i, ", Accuracy: ", accuracy)
+}

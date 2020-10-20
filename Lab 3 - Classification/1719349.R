@@ -10,6 +10,11 @@
 # 4) Compare the accuracy of the different pruned trees to KNN with different values of k.
 # -------------------------
 
+accuracy <- function(predictions, real_values){
+  n_correct = sum(predictions == real_values)
+  return(n_correct/length(real_values))
+}
+
 # Read in datasets and combine them into one
 iris <- cbind(
   read.csv("../Lab 2 - Clustering/iris.csv", sep=",", header=FALSE),
@@ -17,7 +22,7 @@ iris <- cbind(
 )
 
 # Post-concatenation, col 5 is the same as col 1, so rename it to avoid confusion
-names(iris)[5] = "V5"
+names(iris)[5] <- "V5"
 
 # Randomise the dataset
 iris_rand <- iris[sample(150, 150), ]
@@ -46,8 +51,7 @@ text(fit, use.n=TRUE, all=TRUE, cex=.8)
 tree_pred <- predict(fit, X_test, type="class")
 
 # Compare this to the actual test values to get the accuracy
-accuracy <- sum(tree_pred == y_test) / length(y_test)
-print(accuracy)
+print(accuracy(tree_pred, y_test))
 
 
 # See what effect pruning has (using the cp parameter)
@@ -58,8 +62,7 @@ for (i in c(0.1, 0.5, 0.9)) {
   
   # Calculate the accuracy of the pruned tree
   tree_pred <- predict(pfit, X_test, type='class')
-  accuracy <- sum(tree_pred == y_test) / length(y_test)
-  message("cp: " , i, ", Accuracy: ", accuracy)
+  message("cp: " , i, ", Accuracy: ", accuracy(tree_pred, y_test))
 }
 
 
@@ -82,12 +85,8 @@ fit <- rpart(y_train~., method='class', data=X_train_2)
 plot(fit, uniform=TRUE, main="Decision Tree for iris (V1 and V2)")
 text(fit, use.n=TRUE, all=TRUE, cex=.8)
 
-# Make predictions on the test set
 tree_pred <- predict(fit, X_test_2, type="class")
-
-# Compare this to the actual test values to get the accuracy
-accuracy <- sum(tree_pred == y_test) / length(y_test)
-print(accuracy)
+print(accuracy(tree_pred, y_test))
 
 
 # Classifying using K-Nearest Neighbour - first, install the class lib
@@ -95,7 +94,6 @@ library(class)
 
 # Generate predictions using different values of "k"
 for (i in c(3, 6, 9, 12, 15)) {
-  knn_pred = knn(X_train, X_test, y_train, k=i)
-  accuracy <- sum(knn_pred == y_test) / length(y_test)
-  message("k: " , i, ", Accuracy: ", accuracy)
+  knn_pred = knn(X_train_2, X_test_2, y_train, k=i)
+  message("k: " , i, ", Accuracy: ", accuracy(knn_pred, y_test))
 }

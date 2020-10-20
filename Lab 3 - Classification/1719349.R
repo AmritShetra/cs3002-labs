@@ -53,6 +53,9 @@ tree_pred <- predict(fit, X_test, type="class")
 # Compare this to the actual test values to get the accuracy
 print(accuracy(tree_pred, y_test))
 
+# Print a confusion matrix
+print(table(tree_pred, y_test))
+
 
 # See what effect pruning has (using the cp parameter)
 for (i in c(0.1, 0.5, 0.9)) {
@@ -93,7 +96,7 @@ print(accuracy(tree_pred, y_test))
 library(class)
 
 # Generate predictions using different values of "k"
-for (i in c(3, 6, 9, 12, 15)) {
+for (i in c(3, 6, 9)) {
   knn_pred = knn(X_train_2, X_test_2, y_train, k=i)
   message("k: " , i, ", Accuracy: ", accuracy(knn_pred, y_test))
 }

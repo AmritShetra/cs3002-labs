@@ -45,3 +45,12 @@ predict_out = as.numeric(predict_testNN$net.result>0.5)
 
 # This should predict the output as 1
 print(predict_out)
+
+
+# Set up the test output (XOR gate)
+test_in = rbind(
+  c(-1, -1),
+  c(1, -1),
+  c(-1, 1),
+  c(1, 1)
+)

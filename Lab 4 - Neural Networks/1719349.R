@@ -52,3 +52,46 @@ raw_predictions <- result$net.result
 print(raw_predictions)
 final_predictions <- as.numeric(raw_predictions>0.5)
 print(final_predictions)
+
+
+# -----------------
+# Build a Neural Network classifier of the wine data.
+# 1) Read in "winedata2.csv".
+# 2) Build the architecture of your neural network. The output must be between one and zero.
+# 3) Using any two variables from the test data, create a train and test set.
+# 4) Train the neural network on half of the data and test it on the remaining.
+# 5) Calculate the accuracy.
+# -----------------
+
+wine_data <- read.csv("winedata2.csv", sep=",")
+
+# Convert values in "WineClass" to binary
+for (i in 1:length(wine_data$WineClass)) {
+  if (wine_data$WineClass[i] == 1) {
+    wine_data$WineClass[i] <- 0
+  }
+  else {
+    wine_data$WineClass[i] <- 1
+  }
+}
+
+
+X <- wine_data[, 2:3]
+y <- wine_data[, 1]
+
+X_train <- X[1:65, ]
+y_train <- y[1:65]
+
+X_test <- X[66:130, ]
+y_test <- y[66:130]
+
+NN <- neuralnet(y_train~., X_train, hidden=c(3,3), threshold=0.001,
+                stepmax=1e+05, linear.output=FALSE)
+plot(NN)
+
+result <- compute(NN, X_test)
+raw_predictions <- result$net.result
+final_predictions <- as.numeric(raw_predictions>0.5)
+
+n_correct = sum(final_predictions == y_test)
+print(n_correct / length(y_test))

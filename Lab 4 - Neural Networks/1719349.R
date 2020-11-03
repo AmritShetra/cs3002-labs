@@ -92,5 +92,5 @@ result <- compute(NN, X_test)
 raw_predictions <- result$net.result
 final_predictions <- as.numeric(raw_predictions>0.5)
 
-n_correct <- sum(final_predictions == y_test)
-print(n_correct / length(y_test))
+accuracy <- sum(final_predictions == y_test) / length(y_test)
+print(accuracy)

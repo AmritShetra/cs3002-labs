@@ -70,14 +70,8 @@ wine_data <- read.csv("winedata2.csv", sep=",")
 
 # Convert values in "WineClass" to binary
 wine_class = wine_data$WineClass
-for (i in 1:length(wine_class)) {
-  if (wine_class[i] == 1) {
-    wine_class[i] <- 0
-  }
-  else {
-    wine_class[i] <- 1
-  }
-}
+wine_class[which(wine_class == 1)] <- 0
+wine_class[which(wine_class == 2)] <- 1
 
 X <- wine_data[, 2:3]
 y <- wine_class

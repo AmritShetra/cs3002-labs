@@ -7,6 +7,9 @@
 # Does it learn to correctly classify all the inputs?
 # -----------------
 
+install.packages("neuralnet")
+library(neuralnet)
+
 # Set up a training set - we'll go with an OR gate
 train_in <- rbind(
   c(1, 1),
@@ -66,18 +69,18 @@ print(final_predictions)
 wine_data <- read.csv("winedata2.csv", sep=",")
 
 # Convert values in "WineClass" to binary
-for (i in 1:length(wine_data$WineClass)) {
-  if (wine_data$WineClass[i] == 1) {
-    wine_data$WineClass[i] <- 0
+wine_class = wine_data$WineClass
+for (i in 1:length(wine_class)) {
+  if (wine_class[i] == 1) {
+    wine_class[i] <- 0
   }
   else {
-    wine_data$WineClass[i] <- 1
+    wine_class[i] <- 1
   }
 }
 
-
 X <- wine_data[, 2:3]
-y <- wine_data[, 1]
+y <- wine_class
 
 X_train <- X[1:65, ]
 y_train <- y[1:65]
@@ -85,13 +88,15 @@ y_train <- y[1:65]
 X_test <- X[66:130, ]
 y_test <- y[66:130]
 
+# Train a Neural Network with a 2 hidden layers of 3 neurons each
 NN <- neuralnet(y_train~., X_train, hidden=c(3,3), threshold=0.001,
                 stepmax=1e+05, linear.output=FALSE)
+
 plot(NN)
 
 result <- compute(NN, X_test)
 raw_predictions <- result$net.result
 final_predictions <- as.numeric(raw_predictions>0.5)
 
-n_correct = sum(final_predictions == y_test)
+n_correct <- sum(final_predictions == y_test)
 print(n_correct / length(y_test))
